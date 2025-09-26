@@ -9,9 +9,12 @@
     "build": "echo 'Build complete'"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dotenv": "^17.2.2",
     "express": "^4.18.2",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^9.0.1",
     "validator": "^13.11.0",
@@ -20,7 +23,13 @@
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
-  "keywords": ["assessment", "api", "chat", "messaging", "real-time"],
+  "keywords": [
+    "assessment",
+    "api",
+    "chat",
+    "messaging",
+    "real-time"
+  ],
   "author": "Assessment Creator",
   "license": "MIT"
 }
