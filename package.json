@@ -1,0 +1,26 @@
+{
+  "name": "assessment-3-chat-api",
+  "version": "1.0.0",
+  "description": "Chat/Messaging API Assessment - Fix authentication and implement real-time features",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["assessment", "api", "chat", "messaging", "real-time"],
+  "author": "Assessment Creator",
+  "license": "MIT"
+}
