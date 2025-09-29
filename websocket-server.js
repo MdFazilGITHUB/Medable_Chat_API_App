@@ -7,27 +7,45 @@ require("dotenv").config();
 class WebSocketServer {
   constructor() {
     this.wss = null;
-    this.clients = new Map(); // userId -> WebSocket connection
-    this.rooms = new Map(); // roomId -> Set of userIds
-    this.typingUsers = new Map(); // roomId -> Set of userIds currently typing
+    this.clients = new Map();
+    this.rooms = new Map();
+    this.typingUsers = new Map();
     this.JWT_SECRET = process.env.JWT_SECRET;
     this.apiBaseUrl = process.env.API_BASE_URL || "http://localhost:3004";
   }
 
-  start(port = process.env.WEBSOCKET_PORT || 8080) {
-    this.wss = new WebSocket.Server({
-      port,
+  // Updated start method to accept HTTP server instance
+  start(port = process.env.PORT || 8080, httpServer = null) {
+    const wsOptions = {
       verifyClient: (info) => {
-        // Basic verification - full auth happens on connection
+        // Basic verification - detailed auth happens in handleConnection
         return true;
       }
-    });
+    };
+
+    // Use existing HTTP server if provided (for production)
+    if (httpServer) {
+      wsOptions.server = httpServer;
+      console.log(
+        `🔌 WebSocket server attached to HTTP server on port ${port}`
+      );
+    } else {
+      // Standalone WebSocket server for development
+      wsOptions.port = port;
+      console.log(`🔌 Standalone WebSocket server running on port ${port}`);
+    }
+
+    this.wss = new WebSocket.Server(wsOptions);
 
     this.wss.on("connection", (ws, req) => {
       this.handleConnection(ws, req);
     });
 
-    console.log(`🚀 WebSocket server running on port ${port}`);
+    this.wss.on("error", (error) => {
+      console.error("WebSocket server error:", error);
+    });
+
+    console.log(`🚀 WebSocket server ready!`);
     console.log(`🔌 Real-time chat features enabled!`);
   }
 
@@ -36,6 +54,7 @@ class WebSocketServer {
     const token = query.token || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
+      console.log("❌ WebSocket connection rejected: No token provided");
       ws.close(1008, "Authentication required");
       return;
     }
@@ -46,7 +65,11 @@ class WebSocketServer {
       const username = decoded.username;
       const role = decoded.role;
 
-      // ✅ Store client connection WITH token
+      console.log(
+        `✅ WebSocket connection authenticated: ${username} (${role})`
+      );
+
+      // Store client connection WITH token
       this.clients.set(userId, {
         ws,
         userId,
@@ -66,7 +89,14 @@ class WebSocketServer {
         type: "connected",
         message: "Connected to real-time chat",
         userId,
-        username
+        username,
+        serverInfo: {
+          environment: process.env.NODE_ENV || "development",
+          websocketUrl:
+            process.env.NODE_ENV === "production"
+              ? "wss://medable-chat-api-app.onrender.com"
+              : `ws://localhost:${process.env.PORT || 8080}`
+        }
       });
 
       // Handle incoming messages
