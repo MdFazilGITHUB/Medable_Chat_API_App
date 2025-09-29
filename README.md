@@ -24,7 +24,7 @@ npm install
 npm run dev
 ```
 
-The API will be available at `http://localhost:8888`
+The API will be available at `http://localhost:3004`
 
 ## 👥 Test Users
 
@@ -41,7 +41,7 @@ The API will be available at `http://localhost:8888`
 #### POST /api/auth/login
 Login with username or email
 ```bash
-curl -X POST http://localhost:8888/api/auth/login \
+curl -X POST http://localhost:3004/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","password":"password123"}'
 ```
@@ -49,7 +49,7 @@ curl -X POST http://localhost:8888/api/auth/login \
 #### POST /api/auth/register
 Register new user
 ```bash
-curl -X POST http://localhost:8888/api/auth/register \
+curl -X POST http://localhost:3004/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"newuser","email":"new@test.com","password":"password123"}'
 ```
@@ -57,7 +57,7 @@ curl -X POST http://localhost:8888/api/auth/register \
 #### GET /api/auth/profile
 Get current user profile
 ```bash
-curl http://localhost:8888/api/auth/profile \
+curl http://localhost:3004/api/auth/profile \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -66,19 +66,19 @@ curl http://localhost:8888/api/auth/profile \
 #### GET /api/messages
 Get all chat rooms
 ```bash
-curl http://localhost:8888/api/messages
+curl http://localhost:3004/api/messages
 ```
 
 #### GET /api/messages/:roomId
 Get messages from specific room
 ```bash
-curl http://localhost:8888/api/messages/general?limit=10&offset=0
+curl http://localhost:3004/api/messages/general?limit=10&offset=0
 ```
 
 #### POST /api/messages/:roomId
 Send message to room
 ```bash
-curl -X POST http://localhost:8888/api/messages/general \
+curl -X POST http://localhost:3004/api/messages/general \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{"content":"Hello everyone!"}'
@@ -171,35 +171,35 @@ Decode the final ROT13 message to discover the ultimate challenge.
 ### Authentication Security Tests
 ```bash
 # Test plain text password storage (should fail after fix)
-curl -X POST http://localhost:8888/api/auth/login \
+curl -X POST http://localhost:3004/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","password":"password123"}'
 
 # Test admin key bypass (should be removed)
-curl -X PUT http://localhost:8888/api/auth/status \
+curl -X PUT http://localhost:3004/api/auth/status \
   -H "X-Admin-Key: super-secret-admin-key-2024" \
   -H "Content-Type: application/json" \
   -d '{"userId":"user1","status":"offline"}'
 
 # Test admin data exposure (should be filtered)
 # Login as alice first, then check profile
-curl http://localhost:8888/api/auth/profile \
+curl http://localhost:3004/api/auth/profile \
   -H "Authorization: Bearer <alice-token>"
 ```
 
 ### Authorization Tests
 ```bash
 # Test private room access without membership
-curl http://localhost:8888/api/messages/private
+curl http://localhost:3004/api/messages/private
 
 # Test message editing without ownership
-curl -X PUT http://localhost:8888/api/messages/general/1 \
+curl -X PUT http://localhost:3004/api/messages/general/1 \
   -H "Authorization: Bearer <bob-token>" \
   -H "Content-Type: application/json" \
   -d '{"content":"I can edit anyone\'s message!"}'
 
 # Test cross-user data access
-curl http://localhost:8888/api/auth/profile \
+curl http://localhost:3004/api/auth/profile \
   -H "Authorization: Bearer <user-token>"
 ```
 
@@ -207,17 +207,17 @@ curl http://localhost:8888/api/auth/profile \
 ```bash
 # Test basic JWT access
 curl -H "Authorization: Bearer <token>" \
-     http://localhost:8888/api/whisper
+     http://localhost:3004/api/whisper
 
 # Test admin decryption key access
 curl -H "X-Decrypt-Key: chat-master-key-2024" \
-     http://localhost:8888/api/whisper
+     http://localhost:3004/api/whisper
 
 # Test system whisper code access
-curl "http://localhost:8888/api/whisper?code=system-whisper-2024"
+curl "http://localhost:3004/api/whisper?code=system-whisper-2024"
 
 # Send encrypted whisper message
-curl -X POST http://localhost:8888/api/whisper \
+curl -X POST http://localhost:3004/api/whisper \
   -H "X-Decrypt-Key: chat-master-key-2024" \
   -H "Content-Type: application/json" \
   -d '{"content":"Secret admin message","recipient":"alice","encrypt":true}'

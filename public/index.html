@@ -1,291 +1,843 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Assessment 3 - Chat/Messaging API</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .container { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 20px; margin: 10px 0; }
-        .endpoint { background: rgba(255,255,255,0.1); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #00d4ff; }
-        .method { color: #00d4ff; font-weight: bold; display: inline-block; width: 80px; }
-        code { background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px; font-family: monospace; color: #a8e6cf; }
-        .warning { background: rgba(255,193,7,0.2); border-left: 4px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        .puzzle { background: rgba(23,162,184,0.2); border-left: 4px solid #17a2b8; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        .secret { background: rgba(220,53,69,0.2); border-left: 4px solid #dc3545; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin: 10px 0; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        th { background: rgba(255,255,255,0.2); font-weight: bold; }
-        .users-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-        .user-card { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center; }
-        h1, h2, h3 { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 10px 0;
+      }
+      .endpoint {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 4px solid #00d4ff;
+      }
+      .method {
+        color: #00d4ff;
+        font-weight: bold;
+        display: inline-block;
+        width: 80px;
+      }
+      code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        color: #a8e6cf;
+      }
+      .warning {
+        background: rgba(255, 193, 7, 0.2);
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+      }
+      .puzzle {
+        background: rgba(23, 162, 184, 0.2);
+        border-left: 4px solid #17a2b8;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+      }
+      .secret {
+        background: rgba(220, 53, 69, 0.2);
+        border-left: 4px solid #dc3545;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      th {
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: bold;
+      }
+      .users-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .user-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      h1,
+      h2,
+      h3 {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>💬 Assessment 3: Chat/Messaging API</h1>
-        
-        <div class="warning">
-            <strong>🚨 Security Alert:</strong> This API has multiple authentication vulnerabilities and data exposure issues!
-        </div>
+      <h1>💬 Assessment 3: Chat/Messaging API</h1>
+
+      <div class="warning">
+        <strong>🚨 Security Alert:</strong> This API has multiple authentication
+        vulnerabilities and data exposure issues!
+      </div>
     </div>
 
     <div class="container">
-        <h2>🔐 Authentication Endpoints</h2>
-        
-        <div class="endpoint">
-            <div class="method">POST</div>
-            <strong>/api/auth/login</strong>
-            <p>Login with username/email and password</p>
-            <code>{"username": "alice", "password": "password123"}</code>
-            <code>{"email": "alice@chat.com", "password": "password123"}</code>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">POST</div>
-            <strong>/api/auth/register</strong>
-            <p>Register a new user account</p>
-            <code>{"username": "newuser", "email": "new@chat.com", "password": "mypassword"}</code>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">POST</div>
-            <strong>/api/auth/logout</strong>
-            <p>Logout current user</p>
-            <p><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code></p>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">GET</div>
-            <strong>/api/auth/profile</strong>
-            <p>Get current user profile (try with admin user!)</p>
-            <p><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code></p>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">PUT</div>
-            <strong>/api/auth/status</strong>
-            <p>Update user online status</p>
-            <code>{"status": "online"}</code>
-            <p><strong>Secret:</strong> Try <code>X-Admin-Key: super-secret-admin-key-2024</code></p>
-        </div>
+      <h2>🔐 Authentication Endpoints</h2>
+
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <strong>/api/auth/login</strong>
+        <p>Login with username/email and password</p>
+        <code>{"username": "alice", "password": "password123"}</code>
+        <code>{"email": "alice@chat.com", "password": "password123"}</code>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <strong>/api/auth/register</strong>
+        <p>Register a new user account</p>
+        <code
+          >{"username": "newuser", "email": "new@chat.com", "password":
+          "mypassword"}</code
+        >
+      </div>
+
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <strong>/api/auth/logout</strong>
+        <p>Logout current user</p>
+        <p>
+          <strong>Headers:</strong>
+          <code>Authorization: Bearer &lt;token&gt;</code>
+        </p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <strong>/api/auth/profile</strong>
+        <p>Get current user profile (try with admin user!)</p>
+        <p>
+          <strong>Headers:</strong>
+          <code>Authorization: Bearer &lt;token&gt;</code>
+        </p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">PUT</div>
+        <strong>/api/auth/status</strong>
+        <p>Update user online status</p>
+        <code>{"status": "online"}</code>
+        <p>
+          <strong>Secret:</strong> Try
+          <code>X-Admin-Key: super-secret-admin-key-2024</code>
+        </p>
+      </div>
     </div>
 
     <div class="container">
-        <h2>💬 Messaging Endpoints</h2>
-        
-        <div class="endpoint">
-            <div class="method">GET</div>
-            <strong>/api/messages</strong>
-            <p>Get all chat rooms</p>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">GET</div>
-            <strong>/api/messages/:roomId</strong>
-            <p>Get messages from a specific room</p>
-            <p><strong>Query params:</strong> <code>?limit=50&offset=0</code></p>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">GET</div>
-            <strong>/api/messages/:roomId/:messageId</strong>
-            <p>Get a specific message</p>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">POST</div>
-            <strong>/api/messages/:roomId</strong>
-            <p>Send a message to a room</p>
-            <code>{"content": "Hello everyone!"}</code>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">PUT</div>
-            <strong>/api/messages/:roomId/:messageId</strong>
-            <p>Edit a message (ownership issues!)</p>
-            <code>{"content": "Updated message"}</code>
-        </div>
-        
-        <div class="endpoint">
-            <div class="method">DELETE</div>
-            <strong>/api/messages/:roomId/:messageId</strong>
-            <p>Delete a message</p>
-        </div>
+      <h2>💬 Messaging Endpoints</h2>
+
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <strong>/api/messages</strong>
+        <p>Get all chat rooms</p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <strong>/api/messages/:roomId</strong>
+        <p>Get messages from a specific room</p>
+        <p><strong>Query params:</strong> <code>?limit=50&offset=0</code></p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">GET</div>
+        <strong>/api/messages/:roomId/:messageId</strong>
+        <p>Get a specific message</p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">POST</div>
+        <strong>/api/messages/:roomId</strong>
+        <p>Send a message to a room</p>
+        <code>{"content": "Hello everyone!"}</code>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">PUT</div>
+        <strong>/api/messages/:roomId/:messageId</strong>
+        <p>Edit a message (owner/admin only)</p>
+        <code>{"content": "Updated message content"}</code>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">DELETE</div>
+        <strong>/api/messages/:roomId/:messageId</strong>
+        <p>Delete a message (owner/admin/moderator only)</p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">PUT</div>
+        <strong>/api/messages/:roomId/:messageId</strong>
+        <p>Edit a message (ownership issues!)</p>
+        <code>{"content": "Updated message"}</code>
+      </div>
+
+      <div class="endpoint">
+        <div class="method">DELETE</div>
+        <strong>/api/messages/:roomId/:messageId</strong>
+        <p>Delete a message</p>
+      </div>
     </div>
 
     <div class="container">
-        <h2>👥 Test Users</h2>
-        <div class="users-grid">
-            <div class="user-card">
-                <h4>👑 Alice (Admin)</h4>
-                <p>Username: <code>alice</code></p>
-                <p>Email: <code>alice@chat.com</code></p>
-                <p>Password: <code>password123</code></p>
-                <p>Role: Admin</p>
-            </div>
-            <div class="user-card">
-                <h4>👨‍💻 Bob (User)</h4>
-                <p>Username: <code>bob</code></p>
-                <p>Email: <code>bob@chat.com</code></p>
-                <p>Password: <code>bobsecret</code></p>
-                <p>Role: User</p>
-            </div>
-            <div class="user-card">
-                <h4>🛡️ Charlie (Moderator)</h4>
-                <p>Username: <code>charlie</code></p>
-                <p>Email: <code>charlie@chat.com</code></p>
-                <p>Password: <code>charlie2024</code></p>
-                <p>Role: Moderator</p>
-            </div>
+      <h2>👥 Test Users</h2>
+      <div class="users-grid">
+        <div class="user-card">
+          <h4>👑 Alice (Admin)</h4>
+          <p>Username: <code>alice</code></p>
+          <p>Email: <code>alice@chat.com</code></p>
+          <p>Password: <code>password123</code></p>
+          <p>Role: Admin</p>
         </div>
+        <div class="user-card">
+          <h4>👨‍💻 Bob (User)</h4>
+          <p>Username: <code>bob</code></p>
+          <p>Email: <code>bob@chat.com</code></p>
+          <p>Password: <code>bobsecret</code></p>
+          <p>Role: User</p>
+        </div>
+        <div class="user-card">
+          <h4>🛡️ Charlie (Moderator)</h4>
+          <p>Username: <code>charlie</code></p>
+          <p>Email: <code>charlie@chat.com</code></p>
+          <p>Password: <code>charlie2024</code></p>
+          <p>Role: Moderator</p>
+        </div>
+      </div>
     </div>
 
     <div class="container">
-        <h2>🏠 Chat Rooms</h2>
-        <table>
-            <tr>
-                <th>Room ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Members</th>
-                <th>Access Issues</th>
-            </tr>
-            <tr>
-                <td>general</td>
-                <td>General Chat</td>
-                <td>Public</td>
-                <td>3 users</td>
-                <td>⚠️ Anyone can read messages</td>
-            </tr>
-            <tr>
-                <td>private</td>
-                <td>Private Room</td>
-                <td>Private</td>
-                <td>1 user</td>
-                <td>⚠️ Access control broken</td>
-            </tr>
-        </table>
+      <h2>🏠 Chat Rooms</h2>
+      <table>
+        <tr>
+          <th>Room ID</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Members</th>
+          <th>Access Issues</th>
+        </tr>
+        <tr>
+          <td>general</td>
+          <td>General Chat</td>
+          <td>Public</td>
+          <td>3 users</td>
+          <td>⚠️ Anyone can read messages</td>
+        </tr>
+        <tr>
+          <td>private</td>
+          <td>Private Room</td>
+          <td>Private</td>
+          <td>1 user</td>
+          <td>⚠️ Access control broken</td>
+        </tr>
+      </table>
     </div>
 
     <div class="container">
-        <h2>🧩 Hidden Puzzles & Security Challenges</h2>
-        
-        <div class="puzzle">
-            <h3>🔍 Puzzle 1: Header Decoder</h3>
-            <p>Find the hint in the response headers and discover what it means!</p>
-            <p><strong>Hint:</strong> <code>whisper_endpoint_needs_decryption_key</code></p>
-        </div>
-        
-        <div class="secret">
-            <h3>🤫 Puzzle 2: Secret Whisper Endpoint</h3>
-            <p>Find and access the hidden whisper messaging system!</p>
-            <p><strong>Multiple Access Methods:</strong></p>
-            <ul>
-                <li>JWT Token: Get from login</li>
-                <li>Decryption Key: <code>X-Decrypt-Key: chat-master-key-2024</code></li>
-                <li>Whisper Code: <code>?code=system-whisper-2024</code></li>
-            </ul>
-        </div>
-        
-        <div class="puzzle">
-            <h3>🔐 Puzzle 3: Message Decryption</h3>
-            <p>Decrypt the secret messages using provided tools:</p>
-            <ul>
-                <li>Caesar Cipher (shift 7)</li>
-                <li>XOR Encryption</li>
-                <li>ROT13 Final Message</li>
-            </ul>
-        </div>
-        
-        <div class="secret">
-            <h3>⚡ Puzzle 4: Real-time Challenge</h3>
-            <p>The final ROT13 message contains the ultimate clue...</p>
-            <p><strong>Hint:</strong> WebSocket functionality needs implementation!</p>
-        </div>
-    </div>
+      <h2>🧩 Hidden Puzzles & Security Challenges</h2>
 
-    <div class="container">
-        <h2>🚨 Known Vulnerabilities (Find & Fix!)</h2>
-        
-        <div class="warning">
-            <h3>🔓 Authentication Issues</h3>
-            <ul>
-                <li>Plain text password storage</li>
-                <li>Hardcoded secrets and admin keys</li>
-                <li>Session management problems</li>
-                <li>Silent authentication failures</li>
-            </ul>
-        </div>
-        
-        <div class="warning">
-            <h3>📋 Authorization Problems</h3>
-            <ul>
-                <li>Missing room membership checks</li>
-                <li>Broken message ownership validation</li>
-                <li>Admin privilege escalation</li>
-                <li>Cross-user data access</li>
-            </ul>
-        </div>
-        
-        <div class="warning">
-            <h3>📊 Data Exposure</h3>
-            <ul>
-                <li>User IDs and emails in responses</li>
-                <li>Password exposure for admins</li>
-                <li>Internal error details</li>
-                <li>Edit history without permission</li>
-            </ul>
-        </div>
-    </div>
+      <div class="puzzle">
+        <h3>🔍 Puzzle 1: Header Decoder</h3>
+        <p>Find the hint in the response headers and discover what it means!</p>
+        <p>
+          <strong>Hint:</strong>
+          <code>whisper_endpoint_needs_decryption_key</code>
+        </p>
+      </div>
 
-    <div class="container">
-        <h2>🔧 Test Commands</h2>
-        
-        <h3>Authentication Testing</h3>
-        <code style="display: block; margin: 10px 0;">
-# Login as Alice (admin)<br>
-curl -X POST http://localhost:8888/api/auth/login \<br>
-  -H "Content-Type: application/json" \<br>
-  -d '{"username":"alice","password":"password123"}'
-        </code>
-        
-        <h3>Security Testing</h3>
-        <code style="display: block; margin: 10px 0;">
-# Try admin key bypass<br>
-curl -X PUT http://localhost:8888/api/auth/status \<br>
-  -H "Content-Type: application/json" \<br>
-  -H "X-Admin-Key: super-secret-admin-key-2024" \<br>
-  -d '{"userId":"user1","status":"offline"}'
-        </code>
-        
-        <h3>Message Testing</h3>
-        <code style="display: block; margin: 10px 0;">
-# Access private room without permission<br>
-curl http://localhost:8888/api/messages/private
-        </code>
-        
-        <h3>Whisper Endpoint Testing</h3>
-        <code style="display: block; margin: 10px 0;">
-# Try different access methods<br>
-curl -H "X-Decrypt-Key: chat-master-key-2024" \<br>
-     http://localhost:8888/api/whisper
-        </code>
-    </div>
-
-    <div class="container">
-        <h2>📋 Your Mission</h2>
-        <p>Check the <code>README.md</code> file for your complete assessment tasks:</p>
+      <div class="secret">
+        <h3>🤫 Puzzle 2: Secret Whisper Endpoint</h3>
+        <p>Find and access the hidden whisper messaging system!</p>
+        <p><strong>Multiple Access Methods:</strong></p>
         <ul>
-            <li>🐛 <strong>15+ Security vulnerabilities</strong> to fix</li>
-            <li>⚡ <strong>8+ Missing features</strong> to implement</li>
-            <li>🧩 <strong>4 Complex puzzles</strong> to solve</li>
-            <li>🚀 <strong>Real-time features</strong> to build</li>
+          <li>JWT Token: Get from login</li>
+          <li>
+            Decryption Key: <code>X-Decrypt-Key: chat-master-key-2024</code>
+          </li>
+          <li>Whisper Code: <code>?code=system-whisper-2024</code></li>
         </ul>
-        
-        <div class="warning">
-            <strong>💡 Pro Tip:</strong> This assessment tests both security knowledge and real-time messaging concepts. Good luck!
-        </div>
+      </div>
+
+      <div class="puzzle">
+        <h3>🔐 Puzzle 3: Message Decryption</h3>
+        <p>Decrypt the secret messages using provided tools:</p>
+        <ul>
+          <li>Caesar Cipher (shift 7)</li>
+          <li>XOR Encryption</li>
+          <li>ROT13 Final Message</li>
+        </ul>
+      </div>
+
+      <div class="secret">
+        <h3>⚡ Puzzle 4: Real-time Challenge</h3>
+        <p>The final ROT13 message contains the ultimate clue...</p>
+        <p>
+          <strong>Hint:</strong> WebSocket functionality needs implementation!
+        </p>
+      </div>
     </div>
-</body>
+
+    <div class="container">
+      <h2>🚨 Known Vulnerabilities (Find & Fix!)</h2>
+
+      <div class="warning">
+        <h3>🔓 Authentication Issues</h3>
+        <ul>
+          <li>Plain text password storage</li>
+          <li>Hardcoded secrets and admin keys</li>
+          <li>Session management problems</li>
+          <li>Silent authentication failures</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        <h3>📋 Authorization Problems</h3>
+        <ul>
+          <li>Missing room membership checks</li>
+          <li>Broken message ownership validation</li>
+          <li>Admin privilege escalation</li>
+          <li>Cross-user data access</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        <h3>📊 Data Exposure</h3>
+        <ul>
+          <li>User IDs and emails in responses</li>
+          <li>Password exposure for admins</li>
+          <li>Internal error details</li>
+          <li>Edit history without permission</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>🔧 Test Commands</h2>
+
+      <h3>Authentication Testing</h3>
+      <code style="display: block; margin: 10px 0">
+        # Login as Alice (admin)<br />
+        curl -X POST http://localhost:3004/api/auth/login \<br />
+        -H "Content-Type: application/json" \<br />
+        -d '{"username":"alice","password":"password123"}'
+      </code>
+
+      <h3>Security Testing</h3>
+      <code style="display: block; margin: 10px 0">
+        # Try admin key bypass<br />
+        curl -X PUT http://localhost:3004/api/auth/status \<br />
+        -H "Content-Type: application/json" \<br />
+        -H "X-Admin-Key: super-secret-admin-key-2024" \<br />
+        -d '{"userId":"user1","status":"offline"}'
+      </code>
+
+      <h3>Message Testing</h3>
+      <code style="display: block; margin: 10px 0">
+        # Access private room without permission<br />
+        curl http://localhost:3004/api/messages/private
+      </code>
+
+      <h3>Whisper Endpoint Testing</h3>
+      <code style="display: block; margin: 10px 0">
+        # Try different access methods<br />
+        curl -H "X-Decrypt-Key: chat-master-key-2024" \<br />
+        http://localhost:3004/api/whisper
+      </code>
+    </div>
+
+    <div class="container">
+      <h2>⚡ Real-Time WebSocket Chat Demo</h2>
+      <div
+        id="websocket-demo"
+        style="
+          background: rgba(255, 255, 255, 0.1);
+          padding: 20px;
+          border-radius: 8px;
+          margin: 10px 0;
+        "
+      >
+        <h3>🚀 WebSocket Chat Interface</h3>
+        <div style="margin: 10px 0">
+          <strong>Connection Status:</strong>
+          <span id="ws-status" style="color: #ff6b6b">Disconnected</span>
+        </div>
+
+        <div style="margin: 10px 0">
+          <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            style="
+              padding: 8px;
+              margin-right: 10px;
+              border-radius: 4px;
+              border: none;
+            "
+          />
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            style="
+              padding: 8px;
+              margin-right: 10px;
+              border-radius: 4px;
+              border: none;
+            "
+          />
+          <button
+            onclick="connectWebSocket()"
+            id="connect-btn"
+            style="
+              padding: 8px 16px;
+              background: #00d4ff;
+              border: none;
+              border-radius: 4px;
+              color: white;
+              cursor: pointer;
+            "
+          >
+            Connect
+          </button>
+        </div>
+
+        <div style="margin: 10px 0">
+          <input
+            type="text"
+            id="room-id"
+            placeholder="Room ID (e.g., general)"
+            style="
+              padding: 8px;
+              margin-right: 10px;
+              border-radius: 4px;
+              border: none;
+            "
+          />
+          <button
+            onclick="joinRoom()"
+            style="
+              padding: 8px 16px;
+              background: #28a745;
+              border: none;
+              border-radius: 4px;
+              color: white;
+              cursor: pointer;
+            "
+          >
+            Join Room
+          </button>
+          <button
+            onclick="leaveRoom()"
+            style="
+              padding: 8px 16px;
+              background: #dc3545;
+              border: none;
+              border-radius: 4px;
+              color: white;
+              cursor: pointer;
+            "
+          >
+            Leave Room
+          </button>
+        </div>
+
+        <div
+          id="messages"
+          style="
+            height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+          "
+        ></div>
+
+        <div style="margin: 10px 0">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type your message..."
+            style="padding: 8px; width: 70%; border-radius: 4px; border: none"
+            onkeypress="handleKeyPress(event)"
+          />
+          <button
+            onclick="sendMessage()"
+            style="
+              padding: 8px 16px;
+              background: #007bff;
+              border: none;
+              border-radius: 4px;
+              color: white;
+              cursor: pointer;
+              margin-left: 10px;
+            "
+          >
+            Send
+          </button>
+        </div>
+
+        <div style="margin: 10px 0">
+          <small style="color: #a8e6cf">
+            Try: alice/password123, bob/bobsecret, or charlie/charlie2024
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>📋 Your Mission</h2>
+      <p>
+        Check the <code>README.md</code> file for your complete assessment
+        tasks:
+      </p>
+      <ul>
+        <li>🐛 <strong>15+ Security vulnerabilities</strong> to fix</li>
+        <li>⚡ <strong>8+ Missing features</strong> to implement</li>
+        <li>🧩 <strong>4 Complex puzzles</strong> to solve</li>
+        <li>🚀 <strong>Real-time features</strong> to build</li>
+      </ul>
+
+      <div class="warning">
+        <strong>💡 Pro Tip:</strong> This assessment tests both security
+        knowledge and real-time messaging concepts. Good luck!
+      </div>
+    </div>
+
+    <script>
+      // WebSocket Chat Implementation
+      let ws = null;
+      let currentToken = null;
+      let currentRoom = null;
+      let isTyping = false;
+      let typingTimeout = null;
+
+      function log(message, type = "info") {
+        const messagesDiv = document.getElementById("messages");
+        const timestamp = new Date().toLocaleTimeString();
+        const color =
+          type === "error"
+            ? "#ff6b6b"
+            : type === "success"
+            ? "#51cf66"
+            : type === "system"
+            ? "#ffd43b"
+            : "#74c0fc";
+        messagesDiv.innerHTML += `<div style="color: ${color}; margin: 2px 0;">[${timestamp}] ${message}</div>`;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+
+      async function connectWebSocket() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (!username || !password) {
+          log("Please enter username and password", "error");
+          return;
+        }
+
+        try {
+          // First, login to get token
+          const loginResponse = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
+
+          if (!loginResponse.ok) {
+            const error = await loginResponse.json();
+            log(`Login failed: ${error.error}`, "error");
+            return;
+          }
+
+          const loginData = await loginResponse.json();
+          currentToken = loginData.token;
+
+          log(
+            `Logged in as ${loginData.user.username} (${loginData.user.role})`,
+            "success"
+          );
+
+          // Connect to WebSocket
+          const wsUrl = `ws://localhost:8080?token=${currentToken}`;
+          ws = new WebSocket(wsUrl);
+          log(ws);
+
+          ws.onopen = () => {
+            document.getElementById("ws-status").textContent = "Connected";
+            document.getElementById("ws-status").style.color = "#51cf66";
+            document.getElementById("connect-btn").textContent = "Disconnect";
+            document.getElementById("connect-btn").onclick =
+              disconnectWebSocket;
+            log("Connected to WebSocket server", "success");
+          };
+
+          ws.onmessage = (event) => {
+            handleWebSocketMessage(JSON.parse(event.data));
+          };
+
+          ws.onclose = () => {
+            document.getElementById("ws-status").textContent = "Disconnected";
+            document.getElementById("ws-status").style.color = "#ff6b6b";
+            document.getElementById("connect-btn").textContent = "Connect";
+            document.getElementById("connect-btn").onclick = connectWebSocket;
+            log("Disconnected from WebSocket server", "system");
+          };
+
+          ws.onerror = (error) => {
+            log(`WebSocket error: ${error.message}`, "error");
+          };
+        } catch (error) {
+          log(`Connection error: ${error.message}`, "error");
+        }
+      }
+
+      function disconnectWebSocket() {
+        if (ws) {
+          ws.close();
+          ws = null;
+          currentToken = null;
+          currentRoom = null;
+        }
+      }
+
+      function handleWebSocketMessage(message) {
+        switch (message.type) {
+          case "connected":
+            log(`Welcome! Connected as ${message.username}`, "success");
+            break;
+
+          case "new_message":
+            log(`[${message.roomId}] ${message.username}: ${message.content}`);
+            break;
+
+          case "message_edited":
+            log(
+              `[${message.roomId}] ${message.editedByUsername} edited a message: ${message.content}`,
+              "system"
+            );
+            break;
+
+          case "message_deleted":
+            log(
+              `[${message.roomId}] ${message.deletedByUsername} deleted a message`,
+              "system"
+            );
+            break;
+
+          case "user_joined":
+            log(
+              `[${message.roomId}] ${message.username} joined the room`,
+              "system"
+            );
+            break;
+
+          case "user_left":
+            log(
+              `[${message.roomId}] ${message.username} left the room`,
+              "system"
+            );
+            break;
+
+          case "typing_start":
+            log(
+              `[${message.roomId}] ${message.username} is typing...`,
+              "system"
+            );
+            break;
+
+          case "typing_stop":
+            // Could remove typing indicator here
+            break;
+
+          case "user_status_changed":
+            log(
+              `[${message.roomId}] ${message.username} is now ${message.status}`,
+              "system"
+            );
+            break;
+
+          case "room_joined":
+            currentRoom = message.roomId;
+            log(`Joined room: ${message.roomId}`, "success");
+            log(
+              `Room members: ${message.members
+                .map((m) => m.username)
+                .join(", ")}`,
+              "system"
+            );
+            break;
+
+          case "pong":
+            log("Ping response received", "system");
+            break;
+
+          default:
+            log(`Unknown message type: ${message.type}`, "system");
+            console.log("Full message:", message);
+        }
+      }
+
+      function joinRoom() {
+        const roomId = document.getElementById("room-id").value;
+        if (!ws || !roomId) {
+          log("Please connect to WebSocket and enter room ID", "error");
+          return;
+        }
+
+        ws.send(
+          JSON.stringify({
+            type: "join_room",
+            roomId: roomId
+          })
+        );
+      }
+
+      function leaveRoom() {
+        if (!ws || !currentRoom) {
+          log("Not connected to any room", "error");
+          return;
+        }
+
+        ws.send(
+          JSON.stringify({
+            type: "leave_room",
+            roomId: currentRoom
+          })
+        );
+
+        currentRoom = null;
+      }
+
+      function sendMessage() {
+        const messageInput = document.getElementById("message-input");
+        const content = messageInput.value.trim();
+
+        if (!ws || !currentRoom || !content) {
+          log("Please connect, join a room, and enter a message", "error");
+          return;
+        }
+
+        // Stop typing indicator
+        if (isTyping) {
+          ws.send(
+            JSON.stringify({
+              type: "typing_stop",
+              roomId: currentRoom
+            })
+          );
+          isTyping = false;
+        }
+
+        ws.send(
+          JSON.stringify({
+            type: "new_message",
+            roomId: currentRoom,
+            content: content,
+            timestamp: new Date().toISOString()
+          })
+        );
+
+        messageInput.value = "";
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === "Enter") {
+          sendMessage();
+          return;
+        }
+
+        // Handle typing indicators
+        if (!ws || !currentRoom) return;
+
+        if (!isTyping) {
+          isTyping = true;
+          ws.send(
+            JSON.stringify({
+              type: "typing_start",
+              roomId: currentRoom
+            })
+          );
+        }
+
+        // Reset typing timeout
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          if (isTyping) {
+            ws.send(
+              JSON.stringify({
+                type: "typing_stop",
+                roomId: currentRoom
+              })
+            );
+            isTyping = false;
+          }
+        }, 1000);
+      }
+
+      // Send ping every 30 seconds to keep connection alive
+      setInterval(() => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "ping" }));
+        }
+      }, 30000);
+
+      // Example helper functions for testing
+      window.testLogin = async (username, password) => {
+        document.getElementById("username").value = username;
+        document.getElementById("password").value = password;
+        await connectWebSocket();
+      };
+
+      window.quickJoin = (roomId) => {
+        document.getElementById("room-id").value = roomId;
+        joinRoom();
+      };
+
+      // Add some helper info
+      log("WebSocket Chat Demo Ready!", "success");
+      log(
+        'Try: testLogin("alice", "password123") then quickJoin("general")',
+        "system"
+      );
+    </script>
+  </body>
 </html>
