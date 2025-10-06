@@ -19,7 +19,7 @@ const createRateLimiter = (windowMs, max, message) => {
 
 // Authentication endpoints rate limiting (stricter)
 const authLimiter = createRateLimiter(
-  0.1 * 60 * 1000, // 15 minutes
+  15 * 60 * 1000, // 15 minutes
   5, // 5 attempts
   'Too many authentication attempts, please try again later'
 );
@@ -40,7 +40,7 @@ const messageLimiter = createRateLimiter(
 
 // Registration rate limiting (very strict)
 const registerLimiter = createRateLimiter(
-  0.1* 60 * 1000, // 1 hour
+  60 * 60 * 1000, // 1 hour
   3, // 3 registrations per hour per IP
   'Too many registration attempts, please try again later'
 );
